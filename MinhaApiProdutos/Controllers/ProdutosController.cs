@@ -36,4 +36,17 @@ public class ProdutosController : ControllerBase
 
         return produto;
     }
+
+    [HttpPost]
+    public async Task<ActionResult<Produto>> PostProduto(Produto produto )
+    {
+        // O Entity Framework "anota" que esse produto deve ser adicionado ao banco de dados.
+        _context.Produtos.Add(produto);
+
+        // Ele gera o comando SQL para inserir o produto e executa esse comando no banco de dados.
+        await _context.SaveChangesAsync();
+
+        // Retorna o status 201 Created e mostra que o produto foi criado.
+        return CreatedAtAction(nameof(GetProduto), new { id = produto.Id }, produto);
+    }
 }
