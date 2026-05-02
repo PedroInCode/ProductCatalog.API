@@ -49,4 +49,22 @@ public class ProdutosController : ControllerBase
         // Retorna o status 201 Created e mostra que o produto foi criado.
         return CreatedAtAction(nameof(GetProduto), new { id = produto.Id }, produto);
     }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteProduto(int id)
+    {
+        var produto = await _context.Produtos.FindAsync(id); // Busca o produto no banco de dados pelo Id.
+
+        if (produto == null) // Se o produto não for encontrado, retorna um status 404 Not Found.
+        {
+            return NotFound();
+        }
+
+        _context.Produtos.Remove(produto); // O Entity Framework "anota" que esse produto deve ser removido do banco de dados.
+        //Ele gera o comando SQL para deletar o produto e executa esse comando no banco de dados.
+
+        await _context.SaveChangesAsync(); // Salva as mudanças no banco de dados.
+
+        return NoContent(); // Retorna um status 204 No Content, indicando que a operação foi bem-sucedida, mas não há conteúdo para retornar.
+    }
 }
