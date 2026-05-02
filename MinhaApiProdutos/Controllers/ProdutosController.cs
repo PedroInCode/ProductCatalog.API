@@ -41,6 +41,8 @@ public class ProdutosController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Produto>> PostProduto(Produto produto )
     {
+        produto.Id = 0; // Garante que o Id seja 0 para que o Entity Framework gere um novo Id automaticamente.
+
         // O Entity Framework "anota" que esse produto deve ser adicionado ao banco de dados.
         _context.Produtos.Add(produto);
 
