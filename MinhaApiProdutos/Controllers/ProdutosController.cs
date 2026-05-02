@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MinhaApiProdutos.Data;
 using MinhaApiProdutos.Models;
+using Microsoft.IdentityModel.Tokens;
 
 namespace MinhaApiProdutos.Controllers;
 
@@ -66,5 +67,40 @@ public class ProdutosController : ControllerBase
         await _context.SaveChangesAsync(); // Salva as mudanças no banco de dados.
 
         return NoContent(); // Retorna um status 204 No Content, indicando que a operação foi bem-sucedida, mas não há conteúdo para retornar.
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> PutProduto(int id, Produto produto)
+    {
+        if (id != produto.Id) // verifica se o id da URL corresponde ao id do produto no corpo da requisição.
+        {
+            return BadRequest("O ID do produto na URl não coincide com o ID do produto!"); // Se não corresponder, retorna um status 400 Bad Request.
+        }
+
+        _context.Entry(produto).State = EntityState.Modified; // O Entity Framework "anota" que esse produto foi modificado e deve ser atualizado no banco de dados.
+
+        try
+        {
+            // Tenta salvar as mudanças no banco de dados.
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException) // Tenta salvar as mudanças no banco de dados. Se ocorrer uma exceção de concorrência, verifica se o produto ainda existe.
+        {
+            // Caso alguem tenha deletado o produto enquanto você estava tentando editar.
+            if (!ProdutoExists(id))// Se o produto não existir mais, retorna um status 404 Not Found.
+            {
+                return NotFound();
+            }
+            else
+            {
+                throw; // Se o produto ainda existir, relança a exceção para que ela seja tratada em outro lugar.
+            }
+        }
+        return NoContent(); // Retorna um status 204 No Content, indicando que a operação foi bem-sucedida, mas não há conteúdo para retornar.
+    }
+
+    private bool ProdutoExists(int id)
+    {
+        return _context.Produtos.Any(e => e.Id == id); // Verifica se existe algum produto com o id fornecido no banco de dados.
     }
 }
