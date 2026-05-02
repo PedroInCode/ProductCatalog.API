@@ -1,43 +1,27 @@
 ﻿# ProductCatalog.API 🚀
 
-> Status do Projeto: :construction: Em Desenvolvimento
+> Status do Projeto: :heavy_check_mark: CRUD Base Completo
 
-Esta é uma API RESTful construída com **.NET 9** voltada para o gerenciamento de catálogos de produtos. O projeto utiliza Entity Framework Core para persistência de dados e SQL Server Express.
+Esta é uma API RESTful construída com **.NET 9** para gerenciamento de catálogos de produtos, utilizando as melhores práticas de desenvolvimento e persistência em banco de dados real.
 
-## 🛠️ Tecnologias Utilizadas
+## 🛠️ Tecnologias e Ferramentas
 
 * **.NET 9** (C#)
 * **Entity Framework Core** (ORM)
 * **SQL Server Express** (Banco de Dados Local)
-* **SQL Server Management Studio - SSMS** (Gerenciamento do Banco)
-* **OpenAPI / Scalar** (Documentação e Testes)
-* **Git/GitHub** (Versionamento)
+* **SQL Server Management Studio - SSMS** (Gerenciamento)
+* **OpenAPI / Scalar** (Documentação Interativa)
 
-## 📌 Funcionalidades em Implementação
+## 📌 Funcionalidades Implementadas
 
-- [x] Configuração inicial do projeto e arquitetura.
-- [x] Modelagem da entidade Produto.
-- [x] Configuração do Contexto de Banco de Dados (DbContext).
-- [x] Criação do Banco via Migrations no SQL Express.
-- [x] Implementação do `ProdutosController` (Leitura - GET).
-- [x] Configuração de Documentação com Scalar.
-- [ ] Implementação do Método de Criação (POST).
-- [ ] Implementação de Update (PUT) e Delete (DELETE).
+- [x] **GET /api/Produtos**: Lista todos os produtos cadastrados.
+- [x] **GET /api/Produtos/{id}**: Busca um produto específico pelo ID.
+- [x] **POST /api/Produtos**: Cria um novo produto (Com proteção de Identity: o sistema ignora IDs enviados manualmente e gera automaticamente no banco).
+- [x] **PUT /api/Produtos/{id}**: Atualiza os dados de um produto existente.
+- [x] **DELETE /api/Produtos/{id}**: Remove um produto do catálogo.
 
-## ⚙️ Como rodar o projeto
+## ⚙️ Como Rodar o Projeto
 
-1. Clone o repositório:
-   `git clone https://github.com/PedroInCode/ProductCatalog.API.git`
-
-2. **Configuração do Banco:** Certifique-se de ter o **SQL Server Express** instalado. No arquivo `appsettings.json`, a Connection String está configurada para:
-   `"Server=.\\SQLEXPRESS;Database=DbProdutosPedro;..."`
-
-3. Execute o comando no Console do Gerenciador de Pacotes para criar as tabelas:
-   `Update-Database`
-
-4. Rode a aplicação com `F5`.
-
-5. **Documentação:** Acesse `/scalar/v1` para testar os endpoints.
-
----
-Desenvolvido por [Pedro Gustavo](https://github.com/PedroInCode)
+1. **Clone o repositório:**
+   ```bash
+   git clone [https://github.com/PedroInCode/ProductCatalog.API.git](https://github.com/PedroInCode/ProductCatalog.API.git)
