@@ -10,4 +10,5 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<Produto> Produtos { get; set; } // Aqui voce diz que quer uma tabela de Produtos baseada na sua Models.
+    public DbSet<Pedido> Pedidos { get; set; } //Aqui voce diz que quer uma tabela de Pedidos baseada na sua Models.
 }
