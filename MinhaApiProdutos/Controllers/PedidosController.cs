@@ -83,8 +83,22 @@ public class PedidosController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Pedido>>> GetPedidos()
+    public async Task<ActionResult<IEnumerable<Pedido>>> GetTodosPedidos()
     {
-        return await _context.Pedidos.Include(pedido => pedido.Produto).ToListAsync();
+        return await _context.Pedidos.ToListAsync();
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Pedido>> GetPedido(int id)
+    {
+        var pedido = await _context.Pedidos.Include(pedido => pedido.Produto) //Traga os dados do Produto junto!
+            .FirstOrDefaultAsync(pedido => pedido.Id == id); // Onde o id do pedido seja igual ao id que recebi.
+
+        if (pedido == null)
+        {
+            return NotFound("Pedido não encontrado!!");
+        }
+
+        return Ok(pedido);
     }
 }
