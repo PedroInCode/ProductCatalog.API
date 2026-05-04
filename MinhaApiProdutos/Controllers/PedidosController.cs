@@ -50,4 +50,35 @@ public class PedidosController : ControllerBase
         // Passo 7 - Retornar o pedido criado
         return CreatedAtAction(nameof(PostPedido), new { id = pedido.Id }, pedido);
     }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeletePedido(int id)
+    {
+        // Busca o pedido para saber o que foi vendido.
+        var pedido = await _context.Pedidos.FindAsync(id);
+
+        // Verifica se o pedido existe.
+        if (pedido == null)
+        {
+            return NotFound("Pedido não encontrado!!");
+        }
+        
+        // Busca o id do produto do pedido para realizar a restauração do estoque.
+        var produto = await _context.Produtos.FindAsync(pedido.ProdutoId);
+
+        // Se o produto não for nulo, a operação para restaurar o estoque é feita.
+        if (produto != null)
+        {
+            produto.Estoque += pedido.Quantidade;
+        }
+
+        //Acessa a tabela de pedidos no banco e remove o pedido pelo id.
+        _context.Pedidos.Remove(pedido);
+
+        // Salva as alterações ( Pedido delatado e Estoque do produto restaurado.
+        await _context.SaveChangesAsync();
+
+        // Avisa que tudo deu certo, porem não tem nada para retornar.
+        return NoContent();
+    }
 }
