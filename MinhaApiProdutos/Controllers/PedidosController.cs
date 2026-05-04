@@ -81,4 +81,10 @@ public class PedidosController : ControllerBase
         // Avisa que tudo deu certo, porem não tem nada para retornar.
         return NoContent();
     }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Pedido>>> GetPedidos()
+    {
+        return await _context.Pedidos.Include(pedido => pedido.Produto).ToListAsync();
+    }
 }
