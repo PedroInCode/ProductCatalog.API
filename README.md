@@ -1,8 +1,8 @@
 ﻿# ProductCatalog.API 🚀
 
-> Status do Projeto: :heavy_check_mark: CRUD Completo & Persistência em Banco Real
+> Status do Projeto: :heavy_check_mark: CRUD Completo, Relacionamentos & Lógica de Estoque
 
-Esta é uma API RESTful robusta desenvolvida com **.NET 9** para o gerenciamento de catálogos de produtos. O projeto foi evoluído de uma estrutura em memória para uma arquitetura com persistência no **SQL Server Express**, focando em boas práticas de desenvolvimento backend.
+Esta é uma API RESTful robusta desenvolvida com **.NET 9** para o gerenciamento de catálogos de produtos e controle de pedidos. O projeto evoluiu de uma estrutura simples para uma arquitetura com persistência no **SQL Server Express**, implementando regras de negócio reais como validação de estoque e integridade referencial.
 
 ---
 
@@ -18,24 +18,40 @@ Esta é uma API RESTful robusta desenvolvida com **.NET 9** para o gerenciamento
 
 ## 📌 Funcionalidades e Endpoints
 
-A API permite gerenciar o ciclo de vida completo de um produto através dos seguintes endpoints:
+### 📦 Módulo de Produtos
+Gerenciamento completo do catálogo:
+* **`GET /api/Produtos`**: Lista todos os produtos cadastrados.
+* **`GET /api/Produtos/{id}`**: Detalhes de um produto específico.
+* **`POST /api/Produtos`**: Criação de produtos com proteção contra conflitos de ID (`Identity`).
+* **`PUT /api/Produtos/{id}`**: Atualização integral de dados do produto.
+* **`DELETE /api/Produtos/{id}`**: Remoção permanente do produto.
 
-* **`GET /api/Produtos`**: Retorna a lista completa de produtos cadastrados no banco.
-* **`GET /api/Produtos/{id}`**: Retorna os detalhes de um produto específico baseado no seu ID.
-* **`POST /api/Produtos`**: Cria um novo produto. 
-    * *Diferencial:* Possui lógica de proteção onde o sistema ignora qualquer ID enviado no corpo da requisição (`Id = 0`), garantindo que o SQL Server gerencie a identidade (`IDENTITY`) de forma automática e segura.
-* **`PUT /api/Produtos/{id}`**: Atualiza todos os dados de um produto existente. Exige que o ID da URL coincida com o ID do objeto enviado no corpo.
-* **`DELETE /api/Produtos/{id}`**: Remove permanentemente um produto do banco de dados.
+### 🛒 Módulo de Pedidos (Vendas & Estoque)
+Lógica de negócio avançada com interação entre tabelas:
+* **`POST /api/Pedidos`**: Realiza uma venda.
+    * *Diferencial:* Valida automaticamente se há **estoque disponível**. Se confirmado, subtrai a quantidade do produto no banco de dados.
+* **`GET /api/Pedidos`**: Lista todos os pedidos utilizando **Eager Loading (`.Include`)**, trazendo os detalhes do Produto (Nome, Preço) de forma otimizada.
+* **`GET /api/Pedidos/{id}`**: Pesquisa detalhada de um pedido específico.
+* **`DELETE /api/Pedidos/{id}`**: Cancela um pedido e **restaura automaticamente o estoque** do produto, garantindo a integridade dos dados.
 
 ---
 
-## ⚙️ Como Rodar o Projeto em sua Máquina
+## ⚙️ Como Rodar o Projeto
 
 ### 1. Pré-requisitos
 * **SDK do .NET 9** instalado.
-* **SQL Server Express** instalado e rodando.
-* **Visual Studio 2022** (recomendado).
+* **SQL Server Express** rodando localmente.
 
-### 2. Clonar o Repositório
+### 2. Configuração do Banco
+Certifique-se de atualizar a `ConnectionString` no arquivo `appsettings.json` com as suas credenciais locais do SQL Server.
+
+### 3. Clonar e Executar
 ```bash
+# Clonar o repositório
 git clone [https://github.com/PedroInCode/ProductCatalog.API.git](https://github.com/PedroInCode/ProductCatalog.API.git)
+
+# Entrar na pasta
+cd MinhaApiProdutos
+
+# Executar o projeto
+dotnet run
