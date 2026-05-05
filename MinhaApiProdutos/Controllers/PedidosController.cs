@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MinhaApiProdutos.Data;
 using MinhaApiProdutos.Models;
 using Microsoft.IdentityModel.Tokens;
+using MinhaApiProdutos.DTOs;
 
 namespace MinhaApiProdutos.Controllers;
 
@@ -99,6 +100,15 @@ public class PedidosController : ControllerBase
             return NotFound("Pedido não encontrado!!");
         }
 
-        return Ok(pedido);
+        var response = new PedidoResponseDTO
+        {
+            Id = pedido.Id,
+            Quantidade = pedido.Quantidade,
+            ProdutoId = pedido.ProdutoId,
+            NomeProduto = pedido.Produto.Nome,
+            PrecoUnitario = pedido.Produto.Preco
+        };
+
+        return Ok(response);
     }
 }
