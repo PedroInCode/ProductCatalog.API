@@ -84,9 +84,21 @@ public class PedidosController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Pedido>>> GetTodosPedidos()
+    public async Task<ActionResult<IEnumerable<PedidoResponseDTO>>> GetTodosPedidos()
     {
-        return await _context.Pedidos.ToListAsync();
+        var pedidos = await _context.Pedidos.Include(p => p.Produto).ToListAsync();
+
+        var response = pedidos.Select(p => new PedidoResponseDTO
+        {
+            Id = p.Id,
+            Quantidade = p.Quantidade,
+            ProdutoId = p.ProdutoId,
+            NomeProduto = p.Produto.Nome,
+            PrecoUnitario = p.Produto.Preco
+
+        }).ToList();
+
+        return Ok(response);
     }
 
     [HttpGet("{id}")]
