@@ -19,6 +19,6 @@ public class Pedido
 
     // Propriedade de navegação para o produto
     // ? significa que a propriedade pode ser nula antes de ser carregada.
-    //[JsonIgnore] // Evita a referência circular durante a serialização JSON
+    [JsonIgnore] // Evita a referência circular durante a serialização JSON
     public Produto? Produto { get; set; } = null!;
 }
