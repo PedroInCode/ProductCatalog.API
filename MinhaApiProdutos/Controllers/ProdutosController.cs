@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MinhaApiProdutos.Data;
 using MinhaApiProdutos.Models;
 using Microsoft.IdentityModel.Tokens;
+using MinhaApiProdutos.DTOs;
 
 namespace MinhaApiProdutos.Controllers;
 
@@ -20,9 +21,20 @@ public class ProdutosController : ControllerBase
 
     // Primeiro Metodo: GET /api/produtos
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Produto>>> GetProdutos()
+    public async Task<ActionResult<IEnumerable<ProdutoResponseDTO>>> GetProdutos()
     {
-        return await _context.Produtos.ToListAsync();
+        var produtos = await _context.Produtos.ToListAsync(); // Busca todos os produtos no banco de dados.
+
+        var produtosDTO = produtos.Select(p => new ProdutoResponseDTO
+        {
+            Id = p.Id,
+            Nome = p.Nome,
+            Descricao = p.Descricao,
+            Preco = p.Preco
+
+        }).ToList();
+
+        return Ok(produtosDTO); // Retorna um status 200 OK e a lista de produtos no formato DTO.
     }
 
     [HttpGet("{id}")]

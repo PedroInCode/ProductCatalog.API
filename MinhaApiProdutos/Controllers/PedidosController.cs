@@ -102,7 +102,7 @@ public class PedidosController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Pedido>> GetPedido(int id)
+    public async Task<ActionResult<PedidoResponseDTO>> GetPedido(int id)
     {
         var pedido = await _context.Pedidos.Include(pedido => pedido.Produto) //Traga os dados do Produto junto!
             .FirstOrDefaultAsync(pedido => pedido.Id == id); // Onde o id do pedido seja igual ao id que recebi.
