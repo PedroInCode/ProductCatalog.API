@@ -51,18 +51,33 @@ public class ProdutosController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Produto>> PostProduto(Produto produto )
+    public async Task<ActionResult<ProdutoResponseDTO>> PostProduto(ProdutoCreateDTO produtoDto )
     {
-        produto.Id = 0; // Garante que o Id seja 0 para que o Entity Framework gere um novo Id automaticamente.
+        // mapeando o DTO para a entidade Produto
+        var novoProduto = new Produto
+        {
+            Nome = produtoDto.Nome,
+            Descricao = produtoDto.Descricao,
+            Preco = produtoDto.Preco,
+            Estoque = produtoDto.Estoque
+        };
 
         // O Entity Framework "anota" que esse produto deve ser adicionado ao banco de dados.
-        _context.Produtos.Add(produto);
+        _context.Produtos.Add(novoProduto);
 
         // Ele gera o comando SQL para inserir o produto e executa esse comando no banco de dados.
         await _context.SaveChangesAsync();
 
-        // Retorna o status 201 Created e mostra que o produto foi criado.
-        return CreatedAtAction(nameof(GetProduto), new { id = produto.Id }, produto);
+        // Preparando a resposta
+        var responseDto = new ProdutoResponseDTO
+        {
+            Id = novoProduto.Id,
+            Nome = novoProduto.Nome,
+            Descricao = novoProduto.Descricao,
+            Preco = novoProduto.Preco
+        };
+
+        return CreatedAtAction(nameof(GetProduto), new { id = novoProduto.Id }, responseDto); // Retorna um status 201 Created, com a localização do novo recurso e o produto criado no formato DTO.
     }
 
     [HttpDelete("{id}")]
