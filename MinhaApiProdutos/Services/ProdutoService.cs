@@ -47,4 +47,22 @@ public class ProdutoService : IProdutoService
             Preco = produto.Preco
         };
     }
+
+    public async Task<ProdutoResponseDTO?> ObterPorId(int id)
+    {
+        // Amanhã a gente faz a lógica real, por enquanto retorna null só pro erro sumir
+        return null;
+    }
+
+    public async Task<bool> Atualizar(int id, ProdutoCreateDTO dto)
+    {
+        // Retornando false provisoriamente
+        return false;
+    }
+
+    public async Task<bool> Deletar(int id)
+    {
+        // Retornando false provisoriamente
+        return false;
+    }
 }
