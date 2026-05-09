@@ -26,7 +26,7 @@ public class ProdutoService : IProdutoService
         });
     }
 
-    public async Task<ProdutoResponseDTO> Criar(ProdutoCreateDTO dto )
+    public async Task<ProdutoResponseDTO> Criar(ProdutoCreateDTO dto)
     {
         var produto = new Produto
         {
@@ -56,25 +56,39 @@ public class ProdutoService : IProdutoService
 
     public async Task<bool> Atualizar(int id, ProdutoCreateDTO dto)
     {
+        // Busca o produto existente pelo ID
         var produtoExistente = await _context.Produtos.FindAsync(id);
 
+        // Verifica se o produto existe
         if (produtoExistente == null)
         {
             return false; // Produto não encontrado
         }
 
+        // Atualiza as propriedades do produto existente com os valores do DTO
         produtoExistente.Nome = dto.Nome;
         produtoExistente.Descricao = dto.Descricao;
         produtoExistente.Preco = dto.Preco;
         produtoExistente.Estoque = dto.Estoque;
 
+        // Salva as alterações no banco de dados
         await _context.SaveChangesAsync();
         return true; // Atualização bem-sucedida
     }
 
     public async Task<bool> Deletar(int id)
     {
-        // Retornando false provisoriamente
-        return false;
+        // Busca o produto pelo ID
+        var produto = await _context.Produtos.FindAsync(id);
+
+        // Verifica se o produto existe
+        if (produto == null)
+            return false; // Produto não encontrado
+
+        // Remove o produto do contexto e salva as alterações
+        _context.Produtos.Remove(produto);
+        await _context.SaveChangesAsync();
+
+        return true; // Deleção bem-sucedida
     }
 }
