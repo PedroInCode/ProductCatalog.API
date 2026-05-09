@@ -50,8 +50,18 @@ public class ProdutoService : IProdutoService
 
     public async Task<ProdutoResponseDTO?> ObterPorId(int id)
     {
-        // Amanhã a gente faz a lógica real, por enquanto retorna null só pro erro sumir
-        return null;
+        var produto = await _context.Produtos.FindAsync(id);
+        
+        if (produto == null)
+            return null; // Produto não encontrado
+
+        return new ProdutoResponseDTO
+        {
+            Id = produto.Id,
+            Nome = produto.Nome,
+            Descricao = produto.Descricao,
+            Preco = produto.Preco
+        };
     }
 
     public async Task<bool> Atualizar(int id, ProdutoCreateDTO dto)
