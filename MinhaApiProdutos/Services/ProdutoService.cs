@@ -56,8 +56,20 @@ public class ProdutoService : IProdutoService
 
     public async Task<bool> Atualizar(int id, ProdutoCreateDTO dto)
     {
-        // Retornando false provisoriamente
-        return false;
+        var produtoExistente = await _context.Produtos.FindAsync(id);
+
+        if (produtoExistente == null)
+        {
+            return false; // Produto não encontrado
+        }
+
+        produtoExistente.Nome = dto.Nome;
+        produtoExistente.Descricao = dto.Descricao;
+        produtoExistente.Preco = dto.Preco;
+        produtoExistente.Estoque = dto.Estoque;
+
+        await _context.SaveChangesAsync();
+        return true; // Atualização bem-sucedida
     }
 
     public async Task<bool> Deletar(int id)
